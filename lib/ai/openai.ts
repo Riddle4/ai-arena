@@ -11,7 +11,7 @@ export async function generateOpenAIResponse(messages: ChatCompletionMessagePara
     model: model || process.env.OPENAI_MODEL || "gpt-4.1-mini",
     messages,
     temperature: 0.78,
-    max_tokens: 420
+    max_completion_tokens: 420
   });
 
   return response.choices[0]?.message?.content?.trim() || "";

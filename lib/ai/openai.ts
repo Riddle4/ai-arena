@@ -10,7 +10,6 @@ export async function generateOpenAIResponse(messages: ChatCompletionMessagePara
   const response = await client.chat.completions.create({
     model: model || process.env.OPENAI_MODEL || "gpt-4.1-mini",
     messages,
-    temperature: 0.78,
     max_completion_tokens: 420
   });
 

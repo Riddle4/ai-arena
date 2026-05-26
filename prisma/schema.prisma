@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Debate {
+  id        String   @id @default(cuid())
+  title     String
+  topic     String
+  format    String
+  tone      String
+  language  String
+  length    Int
+  poweredBy String   @default("Cosmo")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  agents     Agent[]
+  messages   Message[]
+  analysis   Analysis?
+  socialPost SocialPost?
+}
+
+model Agent {
+  id          String @id @default(cuid())
+  debateId    String
+  debate      Debate @relation(fields: [debateId], references: [id], onDelete: Cascade)
+  name        String
+  provider    String
+  model       String
+  personality String
+  role        String
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  debateId  String
+  debate    Debate   @relation(fields: [debateId], references: [id], onDelete: Cascade)
+  speaker   String
+  provider  String
+  model     String
+  turn      Int
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model Analysis {
+  id               String @id @default(cuid())
+  debateId         String @unique
+  debate           Debate @relation(fields: [debateId], references: [id], onDelete: Cascade)
+  summary          String
+  agentAStrengths  String
+  agentBStrengths  String
+  agentAWeaknesses String
+  agentBWeaknesses String
+  bestQuotes       String
+  keyInsights      String
+  verdict          String
+  neutralAnalysis  String
+  suggestedTitle   String
+  socialAngle      String
+}
+
+model SocialPost {
+  id             String @id @default(cuid())
+  debateId       String @unique
+  debate         Debate @relation(fields: [debateId], references: [id], onDelete: Cascade)
+  linkedinLong   String
+  linkedinShort  String
+  xPost          String
+  instagram      String
+  videoScript    String
+  carousel       String
+  hashtags       String
+}

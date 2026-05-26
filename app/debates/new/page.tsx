@@ -16,7 +16,10 @@ export default function NewDebatePage() {
             Set the topic, define the agents, choose the tone, and let the debate begin.
           </p>
         </div>
-        <DebateForm />
+        <DebateForm
+          defaultOpenAIModel={process.env.OPENAI_MODEL || "gpt-4.1-mini"}
+          defaultGrokModel={process.env.GROK_MODEL || "grok-3-mini"}
+        />
       </section>
       <ArenaFooter />
     </main>

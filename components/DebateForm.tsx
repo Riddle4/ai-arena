@@ -42,23 +42,28 @@ const lengths = [
   { label: "Very long — 24 turns", value: 24 }
 ];
 
-const defaultA: AgentConfig = {
-  name: "OpenAI",
-  provider: "OpenAI",
-  model: "gpt-4.1-mini",
-  personality: "Structured",
-  role: "Defend its own approach"
-};
-const defaultB: AgentConfig = {
-  name: "Grok",
-  provider: "Grok",
-  model: "grok-3-mini",
-  personality: "Provocative",
-  role: "Challenge the other agent"
-};
-
-export function DebateForm() {
+export function DebateForm({
+  defaultOpenAIModel,
+  defaultGrokModel
+}: {
+  defaultOpenAIModel: string;
+  defaultGrokModel: string;
+}) {
   const router = useRouter();
+  const defaultA: AgentConfig = {
+    name: "OpenAI",
+    provider: "OpenAI",
+    model: defaultOpenAIModel,
+    personality: "Structured",
+    role: "Defend its own approach"
+  };
+  const defaultB: AgentConfig = {
+    name: "Grok",
+    provider: "Grok",
+    model: defaultGrokModel,
+    personality: "Provocative",
+    role: "Challenge the other agent"
+  };
   const [topic, setTopic] = useState("");
   const [format, setFormat] = useState("Debate");
   const [tone, setTone] = useState("Serious");

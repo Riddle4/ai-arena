@@ -65,7 +65,7 @@ Keep it nuanced, intelligent, publishable, and include this sentence inside neut
         },
         { role: "user", content: prompt }
       ],
-      "gpt-4.1-mini"
+      process.env.OPENAI_MODEL || "gpt-4.1-mini"
     );
     const parsed = JSON.parse(raw) as AnalysisJson;
     return {

@@ -60,7 +60,7 @@ Return JSON with:
 linkedinLong, linkedinShort, xPost, instagramCaption, videoScript, carousel as exactly 8 slides with slide/title/text, hashtags, suggestedTitle.`
         }
       ],
-      "gpt-4.1-mini"
+      process.env.OPENAI_MODEL || "gpt-4.1-mini"
     );
     const parsed = JSON.parse(raw) as SocialContent;
     return { ...fallback, ...parsed };

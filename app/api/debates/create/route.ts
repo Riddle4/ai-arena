@@ -3,10 +3,18 @@ import { prisma } from "@/lib/db";
 import type { DebateConfig } from "@/lib/types";
 
 function cleanAgent(agent: any) {
+  const provider = String(agent?.provider || "").trim();
+  const fallbackModel =
+    provider === "OpenAI"
+      ? process.env.OPENAI_MODEL || "gpt-4.1-mini"
+      : provider === "Grok"
+        ? process.env.GROK_MODEL || "grok-3-mini"
+        : "";
+
   return {
     name: String(agent?.name || "").trim(),
-    provider: String(agent?.provider || "").trim(),
-    model: String(agent?.model || "").trim(),
+    provider,
+    model: String(agent?.model || fallbackModel).trim(),
     personality: String(agent?.personality || "").trim(),
     role: String(agent?.role || "").trim()
   };

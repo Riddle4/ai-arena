@@ -12,7 +12,7 @@ export async function generateGrokResponse(messages: ChatCompletionMessageParam[
   });
 
   const response = await client.chat.completions.create({
-    model: model || "grok-3-mini",
+    model: model || process.env.GROK_MODEL || "grok-3-mini",
     messages,
     temperature: 0.82,
     max_tokens: 420

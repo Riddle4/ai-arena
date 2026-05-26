@@ -9,10 +9,23 @@ export function DebateResultClient({ debateId }: { debateId: string }) {
   const searchParams = useSearchParams();
   const shouldGenerate = searchParams.get("generate") === "1";
   const generatedRef = useRef(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const nextStepRef = useRef<Promise<StepResponse> | null>(null);
+  const liveStatusRef = useRef("idle");
   const [debate, setDebate] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
+  const [liveStatus, setLiveStatus] = useState("idle");
+  const [spokenTurn, setSpokenTurn] = useState(0);
   const [error, setError] = useState("");
+
+  type StepResponse = {
+    debate: any;
+    audioUrl?: string | null;
+    status: "running" | "ready_to_finalize" | "completed";
+    currentTurn: number;
+    totalTurns: number;
+  };
 
   async function loadDebate() {
     const response = await fetch(`/api/debates/${debateId}`, { cache: "no-store" });
@@ -26,22 +39,100 @@ export function DebateResultClient({ debateId }: { debateId: string }) {
     return data.debate;
   }
 
-  async function generate() {
-    setGenerating(true);
-    setError("");
-    try {
-      const response = await fetch(`/api/debates/${debateId}/generate`, { method: "POST" });
-      const data = await response.json();
+  async function postJson<T>(url: string) {
+    const response = await fetch(url, { method: "POST" });
+    const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.error || "The debate could not be generated.");
+    if (!response.ok) {
+      throw new Error(data.error || "The debate could not continue.");
+    }
+
+    return data as T;
+  }
+
+  async function finalize() {
+    setLiveStatus("finalizing");
+    liveStatusRef.current = "finalizing";
+    const data = await postJson<{ debate: any; status: string }>(`/api/debates/${debateId}/finalize`);
+    setDebate(data.debate);
+    setGenerating(false);
+    setLiveStatus("completed");
+    liveStatusRef.current = "completed";
+  }
+
+  function prefetchNextStep() {
+    if (nextStepRef.current || liveStatusRef.current !== "running") {
+      return;
+    }
+
+    nextStepRef.current = postJson<StepResponse>(`/api/debates/${debateId}/step`);
+    nextStepRef.current.catch(() => undefined);
+  }
+
+  async function playAndContinue(step: StepResponse) {
+    setDebate(step.debate);
+    setSpokenTurn(step.currentTurn);
+
+    if (step.status === "running") {
+      prefetchNextStep();
+    }
+
+    const continueAfterAudio = async () => {
+      if (step.status === "ready_to_finalize" || step.status === "completed") {
+        await finalize();
+        return;
       }
 
-      setDebate(data.debate);
+      const prefetched = nextStepRef.current;
+      nextStepRef.current = null;
+      const nextStep = prefetched ? await prefetched : await postJson<StepResponse>(`/api/debates/${debateId}/step`);
+      await playAndContinue(nextStep);
+    };
+
+    if (!step.audioUrl || !audioRef.current) {
+      await continueAfterAudio();
+      return;
+    }
+
+    audioRef.current.onended = () => {
+      void continueAfterAudio().catch((audioError) => {
+        setError(audioError instanceof Error ? audioError.message : "The debate could not continue.");
+        setGenerating(false);
+        setLiveStatus("idle");
+      });
+    };
+    audioRef.current.onerror = () => {
+      void continueAfterAudio().catch((audioError) => {
+        setError(audioError instanceof Error ? audioError.message : "The debate could not continue.");
+        setGenerating(false);
+        setLiveStatus("idle");
+      });
+    };
+    audioRef.current.src = step.audioUrl;
+    audioRef.current.load();
+
+    try {
+      await audioRef.current.play();
+    } catch {
+      await continueAfterAudio();
+    }
+  }
+
+  async function generateLive() {
+    setGenerating(true);
+    setLiveStatus("running");
+    liveStatusRef.current = "running";
+    setError("");
+    nextStepRef.current = null;
+
+    try {
+      const firstStep = await postJson<StepResponse>(`/api/debates/${debateId}/step`);
+      await playAndContinue(firstStep);
     } catch (generateError) {
       setError(generateError instanceof Error ? generateError.message : "The debate could not be generated.");
-    } finally {
       setGenerating(false);
+      setLiveStatus("idle");
+      liveStatusRef.current = "idle";
     }
   }
 
@@ -50,7 +141,7 @@ export function DebateResultClient({ debateId }: { debateId: string }) {
       .then((loaded) => {
         if (shouldGenerate && loaded.messages.length === 0 && !generatedRef.current) {
           generatedRef.current = true;
-          void generate();
+          void generateLive();
         }
       })
       .catch((loadError) => {
@@ -69,6 +160,7 @@ export function DebateResultClient({ debateId }: { debateId: string }) {
 
   return (
     <div className="grid gap-6">
+      <audio ref={audioRef} className="hidden" preload="auto" />
       <section className="glass rounded-lg p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
@@ -81,11 +173,11 @@ export function DebateResultClient({ debateId }: { debateId: string }) {
           {debate.messages.length === 0 ? (
             <button
               type="button"
-              onClick={generate}
+              onClick={generateLive}
               disabled={generating}
               className="rounded-md bg-cyan-300 px-5 py-3 text-sm font-bold text-slate-950 transition hover:bg-cyan-200"
             >
-              {generating ? "Generating debate..." : "Generate debate"}
+              {generating ? "Live debate running..." : "Start live debate"}
             </button>
           ) : null}
         </div>
@@ -99,7 +191,13 @@ export function DebateResultClient({ debateId }: { debateId: string }) {
 
       {generating ? (
         <div className="glass rounded-lg p-6 text-slate-200">
-          The AI agents are alternating turns. Analysis and social posts will be generated at the end.
+          <p className="font-semibold text-white">
+            {liveStatus === "finalizing" ? "Generating analysis and social posts..." : "Live debate in progress"}
+          </p>
+          <p className="mt-2 text-sm text-slate-300">
+            The next agent starts preparing its answer while the current MP3 voiceover is playing.
+            {spokenTurn ? ` Turn ${spokenTurn} of ${debate.length} is being read.` : ""}
+          </p>
         </div>
       ) : null}
 

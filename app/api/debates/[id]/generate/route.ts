@@ -1,11 +1,8 @@
 import { NextResponse } from "next/server";
-import { generateFinalAnalysis } from "@/lib/ai/analysis";
 import { runConversationEngine } from "@/lib/ai/conversationEngine";
+import { finalizeDebate, toAgentConfigs } from "@/lib/ai/finalizeDebate";
 import { prisma } from "@/lib/db";
-import { generateSocialContent } from "@/lib/social/generateSocialContent";
-import type { AgentConfig, DebateConfig } from "@/lib/types";
-import { toJsonString } from "@/lib/utils";
-import type { Agent } from "@prisma/client";
+import type { DebateConfig } from "@/lib/types";
 
 export const runtime = "nodejs";
 
@@ -25,13 +22,7 @@ export async function POST(_request: Request, { params }: { params: Promise<{ id
       return NextResponse.json({ error: "This debate has already been generated." }, { status: 409 });
     }
 
-    const agents = debate.agents.map((agent: Agent) => ({
-      name: agent.name,
-      provider: agent.provider,
-      model: agent.model,
-      personality: agent.personality,
-      role: agent.role
-    })) as [AgentConfig, AgentConfig];
+    const agents = toAgentConfigs(debate.agents);
 
     if (agents.some((agent) => !["OpenAI", "Grok"].includes(agent.provider))) {
       return NextResponse.json(
@@ -61,64 +52,15 @@ export async function POST(_request: Request, { params }: { params: Promise<{ id
       }))
     });
 
-    const analysis = await generateFinalAnalysis({
-      topic: debate.topic,
-      format: debate.format,
-      tone: debate.tone,
-      language: config.language,
-      agents,
-      messages
-    });
-    const social = await generateSocialContent({
-      topic: debate.topic,
-      messages,
-      analysis,
-      tone: debate.tone,
-      language: config.language,
-      agents
-    });
-
-    await prisma.analysis.create({
-      data: {
-        debateId: debate.id,
-        summary: analysis.summary,
-        agentAStrengths: toJsonString(analysis.agentAStrengths),
-        agentBStrengths: toJsonString(analysis.agentBStrengths),
-        agentAWeaknesses: toJsonString(analysis.agentAWeaknesses),
-        agentBWeaknesses: toJsonString(analysis.agentBWeaknesses),
-        bestQuotes: toJsonString(analysis.bestQuotes),
-        keyInsights: toJsonString(analysis.keyInsights),
-        verdict: analysis.verdict,
-        neutralAnalysis: analysis.neutralAnalysis,
-        suggestedTitle: analysis.suggestedTitle,
-        socialAngle: analysis.socialAngle
-      }
-    });
-
-    await prisma.socialPost.create({
-      data: {
-        debateId: debate.id,
-        linkedinLong: social.linkedinLong,
-        linkedinShort: social.linkedinShort,
-        xPost: social.xPost,
-        instagram: social.instagramCaption,
-        videoScript: social.videoScript,
-        carousel: toJsonString(social.carousel),
-        hashtags: toJsonString(social.hashtags)
-      }
-    });
-
-    const generated = await prisma.debate.findUnique({
+    const generated = await prisma.debate.findUniqueOrThrow({
       where: { id: debate.id },
       include: {
         agents: true,
         messages: { orderBy: { turn: "asc" } },
-        analysis: true,
-        socialPost: true
       }
     });
 
-    return NextResponse.json({ debate: generated });
+    return NextResponse.json({ debate: await finalizeDebate(generated) });
   } catch (error) {
     console.error(error);
     const message = error instanceof Error ? error.message : "The debate could not be generated.";

@@ -105,7 +105,7 @@ export function DebateForm({
         throw new Error(data.error || "The debate could not be created.");
       }
 
-      router.push(`/debates/${data.debate.id}?generate=1`);
+      router.push(`/debates/${data.debate.id}`);
     } catch (submitError) {
       setError(submitError instanceof Error ? submitError.message : "The debate could not be created.");
       setLoading(false);

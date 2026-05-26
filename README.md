@@ -28,6 +28,11 @@ Create `.env` from `.env.example`:
 DATABASE_URL=
 OPENAI_API_KEY=
 XAI_API_KEY=
+OPENAI_MODEL=gpt-4.1-mini
+GROK_MODEL=grok-3-mini
+OPENAI_TTS_MODEL=gpt-4o-mini-tts
+OPENAI_TTS_VOICE_AGENT_A=marin
+OPENAI_TTS_VOICE_AGENT_B=cedar
 ```
 
 ## Database

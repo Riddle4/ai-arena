@@ -164,10 +164,10 @@ export function DebateResultClient({ debateId }: { debateId: string }) {
       <section className="glass rounded-lg p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <span className="mb-4 inline-flex rounded-full border border-cyan-300/25 bg-cyan-300/10 px-4 py-2 text-sm font-semibold text-cyan-100">
+            <span className="mb-4 inline-flex rounded-md border border-cyan-300/40 bg-black/35 px-4 py-2 text-sm font-semibold text-cyan-100 shadow-[0_0_24px_rgba(49,247,255,0.12)]">
               Powered by Cosmo
             </span>
-            <h1 className="text-3xl font-semibold text-white md:text-5xl">{debate.title}</h1>
+            <h1 className="neon-text text-3xl font-semibold text-white md:text-5xl">{debate.title}</h1>
             <p className="mt-4 max-w-4xl text-lg leading-8 text-slate-300">{debate.topic}</p>
           </div>
           {debate.messages.length === 0 ? (
@@ -175,7 +175,7 @@ export function DebateResultClient({ debateId }: { debateId: string }) {
               type="button"
               onClick={generateLive}
               disabled={generating}
-              className="rounded-md bg-cyan-300 px-5 py-3 text-sm font-bold text-slate-950 transition hover:bg-cyan-200"
+              className="cyber-button rounded-md px-5 py-3 text-sm font-bold transition"
             >
               {generating ? "Live debate running..." : "Start live debate"}
             </button>
@@ -183,7 +183,7 @@ export function DebateResultClient({ debateId }: { debateId: string }) {
         </div>
         <div className="mt-6 flex flex-wrap gap-3">
           {debate.agents.map((agent: any) => <AgentBadge key={agent.id} name={agent.name} provider={agent.provider} />)}
-          <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs font-semibold text-slate-300">
+          <span className="rounded-full border border-amber-200/25 bg-amber-200/[0.06] px-3 py-1 text-xs font-semibold text-amber-100">
             {debate.format} · {debate.tone} · {debate.language}
           </span>
         </div>

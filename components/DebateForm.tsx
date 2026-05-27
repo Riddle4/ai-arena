@@ -116,10 +116,10 @@ export function DebateForm({
     <form onSubmit={submit} className="grid gap-6">
       <section className="glass rounded-lg p-5">
         <div className="grid gap-4">
-          <label className="grid gap-2 text-sm font-medium text-slate-300">
+          <label className="grid gap-2 text-sm font-medium text-cyan-100">
             Debate topic
             <textarea
-              className="focus-ring min-h-32 rounded-md border border-white/10 bg-slate-950/70 px-3 py-3 text-white"
+              className="focus-ring min-h-32 rounded-md border border-cyan-300/20 bg-black/55 px-3 py-3 text-white placeholder:text-slate-500"
               placeholder="Who is smarter: OpenAI or Grok?"
               value={topic}
               onChange={(event) => setTopic(event.target.value)}
@@ -131,34 +131,34 @@ export function DebateForm({
                 key={preset}
                 type="button"
                 onClick={() => setTopic(preset)}
-                className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-slate-300 transition hover:border-cyan-300/40 hover:text-white"
+                className="rounded-full border border-cyan-300/18 bg-cyan-300/[0.045] px-3 py-1.5 text-xs text-slate-300 transition hover:border-fuchsia-300/40 hover:bg-fuchsia-300/[0.08] hover:text-white"
               >
                 {preset}
               </button>
             ))}
           </div>
           <div className="grid gap-4 md:grid-cols-2">
-            <label className="grid gap-2 text-sm text-slate-300">
+            <label className="grid gap-2 text-sm text-cyan-100">
               Conversation type
-              <select className="focus-ring rounded-md border border-white/10 bg-slate-950/70 px-3 py-2 text-white" value={format} onChange={(event) => setFormat(event.target.value)}>
+              <select className="focus-ring rounded-md border border-cyan-300/20 bg-black/55 px-3 py-2 text-white" value={format} onChange={(event) => setFormat(event.target.value)}>
                 {formats.map((item) => <option key={item}>{item}</option>)}
               </select>
             </label>
-            <label className="grid gap-2 text-sm text-slate-300">
+            <label className="grid gap-2 text-sm text-cyan-100">
               General tone
-              <select className="focus-ring rounded-md border border-white/10 bg-slate-950/70 px-3 py-2 text-white" value={tone} onChange={(event) => setTone(event.target.value)}>
+              <select className="focus-ring rounded-md border border-cyan-300/20 bg-black/55 px-3 py-2 text-white" value={tone} onChange={(event) => setTone(event.target.value)}>
                 {tones.map((item) => <option key={item}>{item}</option>)}
               </select>
             </label>
-            <label className="grid gap-2 text-sm text-slate-300">
+            <label className="grid gap-2 text-sm text-cyan-100">
               Debate length
-              <select className="focus-ring rounded-md border border-white/10 bg-slate-950/70 px-3 py-2 text-white" value={length} onChange={(event) => setLength(Number(event.target.value))}>
+              <select className="focus-ring rounded-md border border-cyan-300/20 bg-black/55 px-3 py-2 text-white" value={length} onChange={(event) => setLength(Number(event.target.value))}>
                 {lengths.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
               </select>
             </label>
-            <label className="grid gap-2 text-sm text-slate-300">
+            <label className="grid gap-2 text-sm text-cyan-100">
               Language
-              <select className="focus-ring rounded-md border border-white/10 bg-slate-950/70 px-3 py-2 text-white" value={language} onChange={(event) => setLanguage(event.target.value as "English" | "French")}>
+              <select className="focus-ring rounded-md border border-cyan-300/20 bg-black/55 px-3 py-2 text-white" value={language} onChange={(event) => setLanguage(event.target.value as "English" | "French")}>
                 <option>English</option>
                 <option>French</option>
               </select>
@@ -176,7 +176,7 @@ export function DebateForm({
       <button
         type="submit"
         disabled={loading}
-        className="rounded-md bg-cyan-300 px-5 py-3 text-sm font-bold text-slate-950 transition hover:bg-cyan-200 disabled:opacity-60"
+        className="cyber-button rounded-md px-5 py-3 text-sm font-bold transition disabled:opacity-60"
       >
         {loading ? "Creating arena..." : "Launch debate"}
       </button>

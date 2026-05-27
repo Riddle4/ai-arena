@@ -16,7 +16,7 @@ export function ExportButtons({ debateId }: { debateId: string }) {
         <a
           key={format}
           href={`/api/debates/${debateId}/export/${format}`}
-          className="inline-flex items-center gap-2 rounded-md border border-cyan-300/25 bg-cyan-300/10 px-4 py-2 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-300/20"
+          className="inline-flex items-center gap-2 rounded-md border border-cyan-300/40 bg-cyan-300/[0.08] px-4 py-2 text-sm font-semibold text-cyan-100 transition hover:border-fuchsia-300/50 hover:bg-fuchsia-300/[0.08]"
         >
           <Download className="h-4 w-4" />
           {label}

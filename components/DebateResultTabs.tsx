@@ -25,14 +25,14 @@ export function DebateResultTabs({ debate }: { debate: any }) {
 
   return (
     <section className="glass rounded-lg p-4 md:p-5">
-      <div className="mb-5 flex gap-2 overflow-x-auto border-b border-white/10 pb-3">
+      <div className="mb-5 flex gap-2 overflow-x-auto border-b border-cyan-300/15 pb-3">
         {tabs.map((tab) => (
           <button
             type="button"
             key={tab}
             onClick={() => setActive(tab)}
             className={`shrink-0 rounded-md px-3 py-2 text-sm font-semibold transition ${
-              active === tab ? "bg-cyan-300 text-slate-950" : "bg-white/[0.04] text-slate-300 hover:bg-white/[0.08]"
+              active === tab ? "cyber-button" : "border border-cyan-300/15 bg-cyan-300/[0.045] text-slate-300 hover:border-fuchsia-300/35 hover:bg-fuchsia-300/[0.08]"
             }`}
           >
             {tab}
@@ -65,7 +65,7 @@ export function DebateResultTabs({ debate }: { debate: any }) {
             ["Key insights", keyInsights],
             ["Verdict", [debate.analysis?.verdict]]
           ].map(([title, items]) => (
-            <article key={String(title)} className="soft-border rounded-lg bg-white/[0.035] p-4">
+            <article key={String(title)} className="soft-border rounded-lg bg-black/35 p-4">
               <h3 className="mb-3 font-semibold text-white">{String(title)}</h3>
               <ul className="grid gap-2 text-sm leading-6 text-slate-300">
                 {(items as string[]).filter(Boolean).map((item) => <li key={item}>• {item}</li>)}
@@ -79,7 +79,7 @@ export function DebateResultTabs({ debate }: { debate: any }) {
         <div className="grid gap-4">
           <CopyButton text={bestQuotes.join("\n")} label="Copy best quotes" />
           {bestQuotes.map((quote) => (
-            <blockquote key={quote} className="soft-border rounded-lg bg-white/[0.035] p-4 text-lg leading-8 text-white">
+            <blockquote key={quote} className="soft-border rounded-lg bg-black/35 p-4 text-lg leading-8 text-white">
               “{quote}”
             </blockquote>
           ))}

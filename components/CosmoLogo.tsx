@@ -8,7 +8,7 @@ export function CosmoLogo() {
 
   return (
     <div className="flex items-center gap-3">
-      <div className="relative grid h-10 w-10 place-items-center overflow-hidden rounded-lg border border-cyan-300/30 bg-slate-950">
+      <div className="relative grid h-10 w-10 place-items-center overflow-hidden rounded-lg border border-cyan-300/50 bg-black shadow-[0_0_24px_rgba(49,247,255,0.22)]">
         {hasLogo ? (
           <Image
             src="/cosmo-logo.png"
@@ -19,13 +19,13 @@ export function CosmoLogo() {
             unoptimized
           />
         ) : (
-          <span className="text-sm font-black text-cyan-100">C</span>
+          <span className="text-sm font-black text-cyan-100 drop-shadow-[0_0_10px_rgba(49,247,255,0.75)]">C</span>
         )}
-        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-cyan-400/30 to-violet-500/30" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-cyan-300/40 via-fuchsia-400/20 to-amber-300/25" />
       </div>
       <div>
         <p className="text-sm font-semibold tracking-wide text-white">Cosmo</p>
-        <p className="text-xs text-cyan-200/70">Created by Cosmo</p>
+        <p className="text-xs text-cyan-200/75">Created by Cosmo</p>
       </div>
     </div>
   );

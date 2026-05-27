@@ -17,7 +17,7 @@ export function SocialContentPanel({ socialPost }: { socialPost: any }) {
   return (
     <div className="grid gap-5">
       {blocks.map(([title, text, label]) => (
-        <section key={title} className="soft-border rounded-lg bg-white/[0.035] p-4">
+        <section key={title} className="soft-border rounded-lg bg-black/35 p-4">
           <div className="mb-3 flex items-center justify-between gap-3">
             <h3 className="font-semibold text-white">{title}</h3>
             <CopyButton text={text} label={label} />
@@ -26,7 +26,7 @@ export function SocialContentPanel({ socialPost }: { socialPost: any }) {
         </section>
       ))}
       <section className="grid gap-3">
-        <h3 className="font-semibold text-white">Carousel structure</h3>
+        <h3 className="font-semibold text-cyan-100">Carousel structure</h3>
         <CarouselPreview value={socialPost.carousel} />
       </section>
     </div>

@@ -2,8 +2,12 @@
 
 :root {
   color-scheme: dark;
-  --background: #050712;
-  --foreground: #f6f8ff;
+  --background: #03040a;
+  --foreground: #f8fbff;
+  --neon-cyan: #31f7ff;
+  --neon-pink: #ff3df2;
+  --neon-amber: #ffd166;
+  --panel: rgba(5, 8, 20, 0.78);
 }
 
 * {
@@ -19,9 +23,13 @@ body {
   min-height: 100vh;
   margin: 0;
   background:
-    radial-gradient(circle at 18% 8%, rgba(21, 129, 255, 0.18), transparent 30rem),
-    radial-gradient(circle at 82% 0%, rgba(116, 72, 255, 0.16), transparent 28rem),
-    linear-gradient(135deg, #050712 0%, #09101f 48%, #070814 100%);
+    linear-gradient(90deg, rgba(49, 247, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(rgba(255, 61, 242, 0.055) 1px, transparent 1px),
+    linear-gradient(135deg, #03040a 0%, #09071a 42%, #030914 72%, #08030f 100%);
+  background-size:
+    72px 72px,
+    72px 72px,
+    auto;
   color: var(--foreground);
   font-family:
     Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
@@ -46,25 +54,81 @@ button:disabled {
 
 .arena-grid {
   background-image:
-    linear-gradient(rgba(128, 174, 255, 0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(128, 174, 255, 0.07) 1px, transparent 1px);
-  background-size: 44px 44px;
-  mask-image: linear-gradient(to bottom, black, transparent);
+    linear-gradient(115deg, transparent 0 43%, rgba(49, 247, 255, 0.14) 43.2% 43.7%, transparent 44%),
+    linear-gradient(65deg, transparent 0 56%, rgba(255, 61, 242, 0.12) 56.2% 56.7%, transparent 57%),
+    linear-gradient(rgba(49, 247, 255, 0.085) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(49, 247, 255, 0.085) 1px, transparent 1px);
+  background-size:
+    280px 220px,
+    260px 240px,
+    48px 48px,
+    48px 48px;
+  mask-image: linear-gradient(to bottom, black 0 58%, transparent);
 }
 
 .glass {
-  border: 1px solid rgba(155, 185, 255, 0.2);
-  background: rgba(8, 13, 29, 0.72);
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+  position: relative;
+  border: 1px solid rgba(49, 247, 255, 0.28);
+  background:
+    linear-gradient(135deg, rgba(49, 247, 255, 0.085), transparent 24%),
+    linear-gradient(315deg, rgba(255, 61, 242, 0.09), transparent 30%),
+    var(--panel);
+  box-shadow:
+    0 0 0 1px rgba(255, 61, 242, 0.08) inset,
+    0 24px 90px rgba(0, 0, 0, 0.42),
+    0 0 44px rgba(49, 247, 255, 0.08);
   backdrop-filter: blur(18px);
 }
 
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(90deg, var(--neon-cyan), transparent 22%) top left / 48% 1px no-repeat,
+    linear-gradient(90deg, transparent, var(--neon-pink)) bottom right / 44% 1px no-repeat,
+    linear-gradient(180deg, var(--neon-cyan), transparent 36%) top left / 1px 52% no-repeat,
+    linear-gradient(180deg, transparent, var(--neon-pink)) bottom right / 1px 48% no-repeat;
+  opacity: 0.82;
+}
+
 .soft-border {
-  border: 1px solid rgba(155, 185, 255, 0.18);
+  border: 1px solid rgba(49, 247, 255, 0.22);
+  box-shadow: 0 0 28px rgba(49, 247, 255, 0.045);
 }
 
 .focus-ring:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(47, 160, 255, 0.25);
-  border-color: rgba(95, 190, 255, 0.75);
+  box-shadow:
+    0 0 0 3px rgba(49, 247, 255, 0.2),
+    0 0 22px rgba(255, 61, 242, 0.14);
+  border-color: rgba(49, 247, 255, 0.82);
+}
+
+.cyber-button {
+  border: 1px solid rgba(49, 247, 255, 0.55);
+  background:
+    linear-gradient(90deg, rgba(49, 247, 255, 0.95), rgba(255, 61, 242, 0.88));
+  color: #02040a;
+  box-shadow:
+    0 0 24px rgba(49, 247, 255, 0.24),
+    0 0 42px rgba(255, 61, 242, 0.18);
+}
+
+.cyber-button:hover {
+  filter: brightness(1.08);
+}
+
+.cyber-kicker {
+  color: var(--neon-amber);
+  text-shadow: 0 0 18px rgba(255, 209, 102, 0.28);
+}
+
+.neon-text {
+  color: #ffffff;
+  text-shadow:
+    0 0 18px rgba(49, 247, 255, 0.16),
+    0 0 36px rgba(255, 61, 242, 0.12);
 }

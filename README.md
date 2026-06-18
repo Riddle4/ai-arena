@@ -43,9 +43,23 @@ Configure `DATABASE_URL` with a PostgreSQL connection string, then run:
 npx prisma migrate dev
 ```
 
+For the bundled local PostgreSQL data directory used during development, start the database before running the app:
+
+```bash
+npm run db:start
+npm run db:status
+```
+
+Stop it with:
+
+```bash
+npm run db:stop
+```
+
 ## Local Development
 
 ```bash
+npm run db:start
 npm run dev
 ```
 

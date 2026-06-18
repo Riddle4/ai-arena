@@ -8,6 +8,9 @@
     "start": "next start",
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit",
+    "db:start": "/Library/PostgreSQL/18/bin/pg_ctl -D .postgres -l .postgres/server.log -o \"-p 55433\" start",
+    "db:stop": "/Library/PostgreSQL/18/bin/pg_ctl -D .postgres stop",
+    "db:status": "/Library/PostgreSQL/18/bin/pg_ctl -D .postgres status",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev"
   },

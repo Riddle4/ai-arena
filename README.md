@@ -63,6 +63,12 @@ npm run db:start
 npm run dev
 ```
 
+If Next.js reports a missing chunk from `.next`, restart with a clean cache:
+
+```bash
+npm run dev:fresh
+```
+
 Open the local Next.js URL shown in the terminal.
 
 ## Deployment Notes
